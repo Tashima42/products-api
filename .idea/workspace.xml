@@ -4,9 +4,7 @@
     <list default="true" id="84641508-4628-4911-b076-572009799bca" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/SuppliersProductsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/SuppliersProductsController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,7 +156,7 @@
       <updated>1603916931811</updated>
       <workItem from="1603916932854" duration="1040000" />
       <workItem from="1603927351512" duration="23882000" />
-      <workItem from="1603983587062" duration="2418000" />
+      <workItem from="1603983587062" duration="5501000" />
     </task>
     <servers />
   </component>

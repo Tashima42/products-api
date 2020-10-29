@@ -12,9 +12,9 @@ class SuppliersProductsController extends Controller
     public function index()
     {
         try {
-            $allSuppliersProducts = Category::all();
-            if(empty($allSuppliersProducts)) {
-                return response()->json(['error' => 'There isn\'t any suppliers-products']);
+            $allSuppliersProducts = SuppliersProducts::all();
+            if($allSuppliersProducts->count() === 0) {
+                return response()->json(['error' => 'There isn\'t any suppliers-products'], 404);
             }
             return response($allSuppliersProducts, 200);
         } catch (\Exception $exception) {
@@ -66,7 +66,6 @@ class SuppliersProductsController extends Controller
         } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()], 500) ;
         }
-        return SuppliersProducts::find($id);
     }
 
     public function update(Request $request, $id)
@@ -85,6 +84,11 @@ class SuppliersProductsController extends Controller
                 return response()->json(['error' => $validator->errors()], 400);
             }
             $suppliersProducts = SuppliersProducts::find($id);
+
+            if(empty($suppliersProducts)) {
+                return response()->json(['message' => 'This supplier-product doesn\'t exists']);
+            }
+
             foreach ($request->all() as $dataName => $data) {
                 $suppliersProducts[$dataName] = $data;
             }
@@ -118,3 +122,4 @@ class SuppliersProductsController extends Controller
         }
     }
 }
+
