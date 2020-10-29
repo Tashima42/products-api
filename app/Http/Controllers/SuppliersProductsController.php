@@ -2,88 +2,119 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\SuppliersProducts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SuppliersProductsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return SuppliersProducts::all();
+        try {
+            $allSuppliersProducts = Category::all();
+            if(empty($allSuppliersProducts)) {
+                return response()->json(['error' => 'There isn\'t any suppliers-products']);
+            }
+            return response($allSuppliersProducts, 200);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
-            'supplier_id' => ['required', 'integer', 'exists:App\Models\Supplier,id'],
-            'price' => ['required', 'numeric']
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'product_id' => 'required|integer|exists:App\Models\Product,id',
+                'supplier_id' => 'required|integer|exists:App\Models\Supplier,id',
+                'price' => 'required|numeric'
+            ]);
 
-        $suppliersProducts = new SuppliersProducts;
-        foreach ($validatedData as $dataName => $data) {
-            $suppliersProducts[$dataName] = $data;
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+            $suppliersProducts = new SuppliersProducts;
+            foreach ($request->all() as $dataName => $data) {
+                $suppliersProducts[$dataName] = $data;
+            }
+            $suppliersProducts->save();
+            return response($suppliersProducts, 201);
+
+        }  catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
-        $suppliersProducts->save();
-
-        return $suppliersProducts;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
+        try {
+            $validator = Validator::make(['id' => $id], [
+                'id' => 'required|integer|exists:App\Models\SuppliersProducts,id'
+            ]);
+
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $supplierProduct = SuppliersProducts::find($id);
+            if(empty($supplierProduct)) {
+                return response()->json(['message' => 'This supplier-product doesn\'t exists']);
+            }
+            return response($supplierProduct, 200);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500) ;
+        }
         return SuppliersProducts::find($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'product_id' => ['integer', 'exists:App\Models\Product,id'],
-            'supplier_id' => ['integer', 'exists:App\Models\Supplier,id'],
-            'price' => ['numeric']
-        ]);
+        try {
+            $toValidate = ['id' => $id];
+            $toValidate += $request->all();
 
-        $suppliersProducts = SuppliersProducts::find($id);
-        foreach ($validatedData as $dataName => $data) {
-            $suppliersProducts[$dataName] = $data;
+            $validator = Validator::make($toValidate, [
+                'product_id' => 'integer|exists:App\Models\Product,id',
+                'supplier_id' => 'integer|exists:App\Models\Supplier,id',
+                'price' => 'numeric'
+            ]);
+
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+            $suppliersProducts = SuppliersProducts::find($id);
+            foreach ($request->all() as $dataName => $data) {
+                $suppliersProducts[$dataName] = $data;
+            }
+            $suppliersProducts->save();
+            return response($suppliersProducts, 200);
+
+        }  catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
-        $suppliersProducts->save();
-
-        return $suppliersProducts;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $supplierProducts = SuppliersProducts::find($id);
-        return $supplierProducts->delete();
+        try {
+            $validator = Validator::make(['id' => $id], [
+                'id' => 'required|integer|exists:App\Models\SuppliersProducts,id'
+            ]);
+
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $suppliersProducts = SuppliersProducts::find($id);
+            if(empty($suppliersProducts)) {
+                return response()->json(['error' => 'This supplier-product doesn\'t exists']);
+            }
+            $suppliersProducts->delete();
+            return response()->json(['message' => 'Deleted'], 200);
+        }  catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500) ;
+        }
     }
 }

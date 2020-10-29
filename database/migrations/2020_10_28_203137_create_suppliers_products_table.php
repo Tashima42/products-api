@@ -15,8 +15,8 @@ class CreateSuppliersProductsTable extends Migration
     {
         Schema::create('suppliers_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("product_id")->constrained('products');
-            $table->foreignId("supplier_id")->constrained('suppliers');
+            $table->foreignId("product_id")->constrained('products')->onDelete('cascade');
+            $table->foreignId("supplier_id")->constrained('suppliers')->onDelete('cascade');
             $table->float("price");
             $table->timestamps();
         });

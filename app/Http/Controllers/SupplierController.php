@@ -2,96 +2,110 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Supplier::all();
+        try {
+            $allSuppliers = Supplier::all();
+            if(empty($allSuppliers)) {
+                return response()->json(['error' => 'There isn\'t any categories']);
+            }
+            return response($allSuppliers, 200);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'company_name' => ['required', 'max:500', 'string', 'unique:App\Models\Supplier,company_name'],
-            'trading_name' => ['required', 'max:500', 'string'],
-            'cnpj' => ['required', 'max:20', 'string', 'unique:App\Models\Supplier,cnpj'],
-            'address_1' => ['required', 'max:2000', 'string'],
-            'address_2' =>  ['max:2000', 'string', 'nullable'],
-            'telephone_1' => ['required', 'max:15', 'string'],
-            'telephone_2' => ['max:15', 'string', 'nullable'],
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'company_name' => 'required|max:500|string|unique:App\Models\Supplier,company_name',
+                'trading_name' => 'required|max:500|string',
+                'cnpj' => 'required|max:20|string|unique:App\Models\Supplier,cnpj',
+                'address_1' => 'required|max:2000|string',
+                'address_2' =>  'max:2000|string|nullable',
+                'telephone_1' => 'required|max:15|string',
+                'telephone_2' => 'max:15|string|nullable'
+            ]);
 
-        $supplier = new Supplier;
-        foreach ($validatedData as $dataName => $data) {
-            $supplier[$dataName] = $data;
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+            $supplier = new Supplier;
+            foreach ($request->all() as $dataName => $data) {
+                $supplier[$dataName] = $data;
+            }
+            $supplier->save();
+            return response($supplier, 201);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
-        $supplier->save();
-
-        return $supplier;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return Supplier::find($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'company_name' => ['max:500', 'string', 'unique:App\Models\Supplier,company_name'],
-            'trading_name' => ['max:500', 'string'],
-            'cnpj' => ['max:20', 'string', 'unique:App\Models\Supplier,cnpj'],
-            'address_1' => ['max:2000', 'string'],
-            'address_2' =>  ['max:2000', 'string', 'nullable'],
-            'telephone_1' => ['max:15', 'string'],
-            'telephone_2' => ['max:15', 'string', 'nullable'],
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'company_name' => 'max:500|string|unique:App\Models\Supplier,company_name',
+                'trading_name' => 'max:500|string',
+                'cnpj' => 'max:20|string|unique:App\Models\Supplier,cnpj',
+                'address_1' => 'max:2000|string',
+                'address_2' =>  'max:2000|string|nullable',
+                'telephone_1' => 'max:15|string',
+                'telephone_2' => 'max:15|string|nullable'
+            ]);
 
-        $supplier = Supplier::find($id);
-        foreach ($validatedData as $dataName => $data) {
-            $supplier[$dataName] = $data;
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $supplier = Supplier::find($id);
+            if(empty($supplier)) {
+                return response()->json(['message' => 'This supplier doesn\'t exists']);
+            }
+            foreach ($request->all() as $dataName => $data) {
+                $supplier[$dataName] = $data;
+            }
+            $supplier->save();
+            return response($supplier, 200);
+
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
-        $supplier->save();
-
-        return $supplier;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $supplier = Supplier::find($id);
-        return $supplier->delete();
+        try {
+            $validator = Validator::make(['id' => $id], [
+                'id' => 'required|integer|exists:App\Models\Supplier,id'
+            ]);
+
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $supplier = Supplier::find($id);
+            if(empty($supplier)) {
+                return response()->json(['error' => 'This supplier doesn\'t exists']);
+            }
+            $supplier->delete();
+            return response()->json(['message' => 'Deleted'], 200);
+        }  catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500) ;
+        }
     }
 }

@@ -13,7 +13,7 @@ class CategoryController extends Controller
         try {
             $allCategories = Category::all();
             if(empty($allCategories)) {
-                return response()->json(['message' => 'There isn\'t any categories']);
+                return response()->json(['error' => 'There isn\'t any categories']);
             }
             return response($allCategories, 200);
         } catch (\Exception $exception) {
@@ -106,7 +106,7 @@ class CategoryController extends Controller
             if(empty($category)) {
                 return response()->json(['error' => 'This category doesn\'t exists']);
             }
-            $deleted = $category->delete();
+            $category->delete();
             return response()->json(['message' => 'Deleted'], 200);
         }  catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()], 500) ;
