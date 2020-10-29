@@ -16,7 +16,7 @@ class Product extends Model
 
     public function supplier_products()
     {
-        return $this->belongsToMany('App\Model\Supplier');
+        return $this->belongsToMany('App\Model\SuppliersProducts');
     }
 
     use HasFactory;

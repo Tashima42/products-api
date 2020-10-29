@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SuppliersProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +30,16 @@ Route::post('product', [ProductController::class, 'store']);
 Route::get('product/{id}', [ProductController::class, 'show']);
 Route::put('product/{id}', [ProductController::class, 'update']);
 Route::delete('product/{id}', [ProductController::class, 'destroy']);
+
+Route::get('supplier', [SupplierController::class, 'index']);
+Route::post('supplier', [SupplierController::class, 'store']);
+Route::get('supplier/{id}', [SupplierController::class, 'show']);
+Route::put('supplier/{id}', [SupplierController::class, 'update']);
+Route::delete('supplier/{id}', [SupplierController::class, 'destroy']);
+
+Route::get('supplier-product', [SuppliersProductsController::class, 'index']);
+Route::post('supplier-product', [SuppliersProductsController::class, 'store']);
+Route::get('supplier-product/{id}', [SuppliersProductsController::class, 'show']);
+Route::put('supplier-product/{id}', [SuppliersProductsController::class, 'update']);
+Route::delete('supplier-product/{id}', [SuppliersProductsController::class, 'destroy']);
 

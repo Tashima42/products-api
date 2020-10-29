@@ -4,85 +4,112 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Category::all();
+        try {
+            $allCategories = Category::all();
+            if(empty($allCategories)) {
+                return response()->json(['message' => 'There isn\'t any categories']);
+            }
+            return response($allCategories, 200);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-                'name' => ['required', 'max:200']
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|max:200|string|unique:App\Models\Category,name'
             ]);
-        $name = $validatedData['name'];
 
-        $category = new Category;
-        $category->name = $name;
-        $category->save();
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
 
-        return $category;
+            $category = new Category;
+            $category->name = $request->name;
+            $category->save();
+
+            return response($category, 201);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500) ;
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @param $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id, $category)
+    public function show($id)
     {
-        return $category::find($id);
+        try {
+            $validator = Validator::make(['id' => $id], [
+                'id' => 'required|integer|exists:App\Models\Category,id'
+            ]);
+
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $category = Category::find($id);
+            if(empty($category)) {
+                return response()->json(['message' => 'This category doesn\'t exists']);
+            }
+            return response($category, 200);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500) ;
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'name' => ['required', 'max:200']
-        ]);
-        $name = $validatedData['name'];
+        try {
+            $toValidate = ['id' => $id];
+            $toValidate += $request->all();
 
-        $category = Category::find($id);
-        $category->name = $name;
-        $category->save();
+            $validator = Validator::make($toValidate, [
+                'name' => 'required|max:200|string|unique:App\Models\Category,name',
+                'id' => 'required|integer|exists:App\Models\Category,id'
+            ]);
 
-        return $category;
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $category = Category::find($id);
+            if(empty($category)) {
+                return response()->json(['error' => 'This category doesn\'t exists'], 400);
+            }
+            $category->name = $request['name'];
+            $category->save();
+
+            return response($category, 200);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500) ;
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        return Category::destroy($id);
-    }
+        try {
+            $validator = Validator::make(['id' => $id], [
+                'id' => 'required|integer|exists:App\Models\Category,id'
+            ]);
 
-    public function all($id)
-    {
-        return Category::find($id)->products;
+            if($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+
+            $category = Category::find($id);
+            if(empty($category)) {
+                return response()->json(['error' => 'This category doesn\'t exists']);
+            }
+            $deleted = $category->delete();
+            return response()->json(['message' => 'Deleted'], 200);
+        }  catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500) ;
+        }
     }
 }
