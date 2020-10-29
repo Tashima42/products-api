@@ -97,7 +97,7 @@ Cria um produto - **POST**  `/api/products`
 	 {
 	  "name":  "Razer Blade",
 	  "description":  "Gaming laptop",
-	  category_id":  2,
+	  "category_id":  2,
 	  "updated_at":  "2020-10-29T16:09:46.000000Z",
 	  "created_at":  "2020-10-29T16:09:46.000000Z",
 	  "id":  1
@@ -230,7 +230,7 @@ Atualiza um fornecedor - **PUT** `/api/suppliers/{id}`
 	 ```json
 	 { 
 	  "trading_name":  "Razer Gaming"
-	 }`
+	 }
 	 ```
  - Response:  *200 - Object*
 	 ```json
@@ -320,7 +320,7 @@ Atualiza um fornecedor-produto - **PUT** `/api/suppliers-products/{id}`
 	 "product_id":  2,
 	 "supplier_id":  2,
 	 "price":  3500,
-	 "updated_at":  "2020-10-29T16:27:46.000000Z"
+	 "updated_at":  "2020-10-29T16:27:46.000000Z",
 	 "created_at":  "2020-10-29T16:24:30.000000Z",
 	 "id":  1
 	 }
