@@ -17,29 +17,27 @@ use App\Http\Controllers\SuppliersProductsController;
 |
 */
 
-Route::get('category', [CategoryController::class, 'index']);
-Route::post('category', [CategoryController::class, 'store']);
-Route::get('category/{id}', [CategoryController::class, 'show']);
-Route::put('category/{id}', [CategoryController::class, 'update']);
-Route::delete('category/{id}', [CategoryController::class, 'destroy']);
+Route::get('categories', [CategoryController::class, 'index']);
+Route::post('categories', [CategoryController::class, 'store']);
+Route::get('categories/{id}', [CategoryController::class, 'show']);
+Route::put('categories/{id}', [CategoryController::class, 'update']);
+Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
 
-Route::get('category/all/{id}', [CategoryController::class, 'all']);
+Route::get('products', [ProductController::class, 'index']);
+Route::post('products', [ProductController::class, 'store']);
+Route::get('products/{id}', [ProductController::class, 'show']);
+Route::put('products/{id}', [ProductController::class, 'update']);
+Route::delete('products/{id}', [ProductController::class, 'destroy']);
 
-Route::get('product', [ProductController::class, 'index']);
-Route::post('product', [ProductController::class, 'store']);
-Route::get('product/{id}', [ProductController::class, 'show']);
-Route::put('product/{id}', [ProductController::class, 'update']);
-Route::delete('product/{id}', [ProductController::class, 'destroy']);
+Route::get('suppliers', [SupplierController::class, 'index']);
+Route::post('suppliers', [SupplierController::class, 'store']);
+Route::get('suppliers/{id}', [SupplierController::class, 'show']);
+Route::put('suppliers/{id}', [SupplierController::class, 'update']);
+Route::delete('suppliers/{id}', [SupplierController::class, 'destroy']);
 
-Route::get('supplier', [SupplierController::class, 'index']);
-Route::post('supplier', [SupplierController::class, 'store']);
-Route::get('supplier/{id}', [SupplierController::class, 'show']);
-Route::put('supplier/{id}', [SupplierController::class, 'update']);
-Route::delete('supplier/{id}', [SupplierController::class, 'destroy']);
-
-Route::get('supplier-product', [SuppliersProductsController::class, 'index']);
-Route::post('supplier-product', [SuppliersProductsController::class, 'store']);
-Route::get('supplier-product/{id}', [SuppliersProductsController::class, 'show']);
-Route::put('supplier-product/{id}', [SuppliersProductsController::class, 'update']);
-Route::delete('supplier-product/{id}', [SuppliersProductsController::class, 'destroy']);
+Route::get('suppliers-products', [SuppliersProductsController::class, 'index']);
+Route::post('suppliers-products', [SuppliersProductsController::class, 'store']);
+Route::get('suppliers-products/{id}', [SuppliersProductsController::class, 'show']);
+Route::put('suppliers-products/{id}', [SuppliersProductsController::class, 'update']);
+Route::delete('suppliers-products/{id}', [SuppliersProductsController::class, 'destroy']);
 
