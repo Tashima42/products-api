@@ -170,10 +170,10 @@ Cria um fornecedor - **POST**  `/api/suppliers`
 	 { 
 	 "company_name":  "Razer Computadores Ltda",
 	 "trading_name":  "Razer",
-	 "cnpj":  "72.381.189/0001-20",
+	 "cnpj": "19.670.492/0001-54",
 	 "address_1":  "Av. Industrial Belgraf, 4516. Bairro Medianeira Eldorado do Sul - RS CEP 92990-000",
 	 "address_2":  "",
-	 "telephone_1":  "4169411964",
+	 "telephone_1": "(16) 91231-6165",
 	 "telephone_2":  ""
 	 }
 	 ```
