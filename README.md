@@ -6,9 +6,12 @@ Escolhi usar o SQLite nesse projeto para manter a simplicidade e evitar problema
   
 Também, optei por criar as tabelas e rotas em inglês, para manter o padrão por todo o código.  
   
-## Iniciando localmente  
-1. Rode as migrations com `php artisan migrate`  
-2. Inicie o servidor local com `php artisan serve --port=8000`  
+## Iniciando localmente 
+1. Instale as dependências com `composer install`
+2. Crie o arquivo `.env` com base no `.env.example`
+3. Crie a database `/database/database.sqlite`
+4. Rode as migrations com `php artisan migrate`  
+5. Inicie o servidor local com `php artisan serve --port=8000`  
   
 ## Fazendo requests localmente  
 Para facilitar o processo de fazer requests localmente, criei uma collection com [todas as rotas disponives](https://documenter.getpostman.com/view/13233153/TVYKYvZj), no Postman  
