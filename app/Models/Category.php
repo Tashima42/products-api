@@ -9,5 +9,12 @@ class Category extends Model
 {
     protected $fillable = ['name'];
 
+    protected $casts = ['name' => 'string'];
+
+    public function products()
+    {
+        return $this->hasMany('App\Models\Product');
+    }
+
     use HasFactory;
 }
